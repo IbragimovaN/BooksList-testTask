@@ -1,4 +1,5 @@
-import type { IBook, IOpenLibraryBook } from "../../types/IBook";
+import type { IBook } from "../../types/IBook";
+import { bookTransformer } from "./helpers/bookTransformer";
 
 export const fetchBooks = async (): Promise<IBook[]> => {
   try {
@@ -8,17 +9,7 @@ export const fetchBooks = async (): Promise<IBook[]> => {
     const data = await response.json();
     console.log(data);
     const formattedBooks = data.docs
-      .map((book: IOpenLibraryBook) => ({
-        id: book.key,
-        title: book.title || "Без названия",
-        author: book.author_name?.[0] || "Неизвестный автор",
-        year: book.first_publish_year,
-        subjects: book.subject?.slice(0, 5) || [],
-        isbn: book.isbn?.[0] || null,
-        coverUrl: book.cover_i
-          ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
-          : null,
-      }))
+      .map(bookTransformer)
       .filter((book: IBook) => book.title && book.author);
 
     return formattedBooks;
