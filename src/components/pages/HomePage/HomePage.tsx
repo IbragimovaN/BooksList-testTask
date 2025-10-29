@@ -9,9 +9,11 @@ import styles from "./HomePage.module.css";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
-  const { booksList, isLoading, error } = useAppSelector((state: RootState) => {
-    return state.booksStore;
-  });
+  const { booksList, isLoading, error, favoritesBooksArr } = useAppSelector(
+    (state: RootState) => {
+      return state.booksStore;
+    }
+  );
   useEffect(() => {
     dispatch(fetchBooksAsync());
   }, [dispatch]);
@@ -21,7 +23,11 @@ export const HomePage = () => {
       <div>
         <div className={styles.list}>
           {booksList.map((book: IBook) => (
-            <Card key={book.id} book={book} />
+            <Card
+              key={book.id}
+              book={book}
+              isFavorite={favoritesBooksArr.some((item) => item === book.id)}
+            />
           ))}
         </div>
       </div>
