@@ -14,6 +14,9 @@ export interface IBooksSlice {
   error: string | null;
   favoritesBooksArr: string[];
   currentBook: IBook | null;
+  currentPage: number;
+  hasMore: boolean;
+  isLoadingMore: boolean;
 }
 
 const initialState: IBooksSlice = {
@@ -22,12 +25,15 @@ const initialState: IBooksSlice = {
   error: null,
   favoritesBooksArr: [],
   currentBook: null,
+  currentPage: 1,
+  hasMore: true,
+  isLoadingMore: false,
 };
 
 export const fetchBooksAsync = createAsyncThunk(
   "books/fetchBooks",
-  async () => {
-    return await fetchBooks();
+  async (page: number = 1) => {
+    return await fetchBooks(page);
   }
 );
 
@@ -66,13 +72,34 @@ export const booksSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchBooksAsync.pending, (state) => {
-        state.isLoading = true;
+      .addCase(fetchBooksAsync.pending, (state, action) => {
+        console.log("actionPending", action);
+        if (action.meta.arg === 1) {
+          state.isLoading = true;
+        } else {
+          state.isLoadingMore = true;
+        }
         state.error = null;
       })
       .addCase(fetchBooksAsync.fulfilled, (state, action) => {
+        console.log("actionFullfilled", action);
         state.isLoading = false;
-        state.booksList = action.payload;
+        state.isLoadingMore = false;
+
+        // Для первой страницы заменяем книги, для последующих - добавляем
+        if (action.meta.arg === 1) {
+          state.booksList = action.payload.booksList;
+        } else {
+          // Используем Set для избежания дубликатов (как в исходном примере)
+          const existingIds = new Set(state.booksList.map((book) => book.id));
+          const newBooks = action.payload.booksList.filter(
+            (book) => !existingIds.has(book.id)
+          );
+          state.booksList = [...state.booksList, ...newBooks];
+        }
+
+        state.hasMore = action.payload.hasMore;
+        state.currentPage = action.meta.arg;
         state.error = null;
       })
       .addCase(fetchBooksAsync.rejected, (state, action) => {
@@ -109,3 +136,5 @@ export const selectIsLoading = (state: RootState) => state.booksStore.isLoading;
 export const selectError = (state: RootState) => state.booksStore.error;
 export const selectCurrentBook = (state: RootState) =>
   state.booksStore.currentBook;
+export const selectHasMoreForInfiniteScroll = (state: RootState) =>
+  state.booksStore.hasMore;

@@ -5,3 +5,18 @@
   align-items: center;
   justify-content: space-between;
 }
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 760px) {
+  .list {
+    justify-content: center;
+  }
+}
