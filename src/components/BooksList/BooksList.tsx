@@ -3,6 +3,7 @@ import type { IBook } from "../../types/IBook";
 import { Spinner } from "../common";
 import styles from "./BooksList.module.css";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
+import { ERROR_MESSAGES } from "../../constants/errorMessages";
 
 interface BooksListProps {
   books: IBook[];
@@ -64,7 +65,7 @@ export const BooksList = ({
       </div>
       {isLoadingMore && <Spinner size="small" className={styles.spinner} />}
       {showOnlyFavorites && books.length === 0 && (
-        <div className={styles.emptyState}>В избранном пока нет книг</div>
+        <div className={styles.emptyState}>{ERROR_MESSAGES.NO_FAVORITES}</div>
       )}
     </div>
   );

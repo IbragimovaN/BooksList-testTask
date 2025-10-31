@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from "../../constants/errorMessages";
 import type { IBook } from "../../types/IBook";
 import { bookTransformer } from "./helpers/bookTransformer";
 
@@ -8,7 +9,7 @@ export const fetchBookById = async (bookId: string): Promise<IBook> => {
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(ERROR_MESSAGES.SERVER_ERROR);
     }
 
     const data = await response.json();

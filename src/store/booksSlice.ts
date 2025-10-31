@@ -7,6 +7,7 @@ import type { IBook } from "../types/IBook";
 import type { RootState } from "./index";
 import { fetchBooks } from "./api/fetchBooks";
 import { fetchBookById } from "./api/fetchBookById";
+import { ERROR_MESSAGES } from "../constants/errorMessages";
 
 export interface IBooksSlice {
   booksList: IBook[];
@@ -95,9 +96,9 @@ export const booksSlice = createSlice({
         state.currentPage = action.meta.arg.page;
         state.error = null;
       })
-      .addCase(fetchBooksAsync.rejected, (state, action) => {
+      .addCase(fetchBooksAsync.rejected, (state) => {
         state.isLoading = false;
-        state.error = action.error.message || "Failed to fetch books";
+        state.error = ERROR_MESSAGES.FAILED_FETCH_BOOKS;
       })
       .addCase(fetchBookByIdAsync.pending, (state) => {
         state.isLoading = true;
@@ -109,9 +110,9 @@ export const booksSlice = createSlice({
         state.currentBook = action.payload;
         state.error = null;
       })
-      .addCase(fetchBookByIdAsync.rejected, (state, action) => {
+      .addCase(fetchBookByIdAsync.rejected, (state) => {
         state.isLoading = false;
-        state.error = action.error.message || "Failed to fetch book";
+        state.error = ERROR_MESSAGES.FAILED_FETCH_BOOKS;
         state.currentBook = null;
       });
   },

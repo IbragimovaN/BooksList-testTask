@@ -11,6 +11,7 @@ import { BackToHomeButton, PageLayout } from "../../common";
 import { Button } from "../../common/Button/Button";
 import styles from "./BookPage.module.css";
 import { NotFoundPage } from "../NotFoundPage/NotFoundPage";
+import { ERROR_MESSAGES } from "../../../constants/errorMessages";
 
 export const BookPage = () => {
   const { id } = useParams();
@@ -25,7 +26,8 @@ export const BookPage = () => {
       dispatch(fetchBookByIdAsync(id));
     }
   }, [id, dispatch]);
-  if (error && error.includes("not found")) {
+
+  if (error && error.includes(ERROR_MESSAGES.BOOK_NOT_FOUND)) {
     return <NotFoundPage />;
   }
   const handleReadBook = () => {
