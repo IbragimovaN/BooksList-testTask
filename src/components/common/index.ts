@@ -5,3 +5,4 @@ export * from "./FavoritesIcon/FavoritesIcon";
 export * from "./SearchInput/SearchInput";
 export * from "./FormInput/FormInput";
 export * from "./FilterChip/FilterChip";
+export * from "./BackToHomeButton/BackToHomeButton";

@@ -7,13 +7,14 @@ import {
   selectIsLoading,
   selectError,
 } from "../../../store/booksSlice";
-import { PageLayout } from "../../common";
+import { BackToHomeButton, PageLayout } from "../../common";
 import { Button } from "../../common/Button/Button";
 import styles from "./BookPage.module.css";
+import { NotFoundPage } from "../NotFoundPage/NotFoundPage";
 
 export const BookPage = () => {
   const { id } = useParams();
-  console.log(id);
+
   const dispatch = useAppDispatch();
   const currentBook = useAppSelector(selectCurrentBook);
   const isLoading = useAppSelector(selectIsLoading);
@@ -24,7 +25,9 @@ export const BookPage = () => {
       dispatch(fetchBookByIdAsync(id));
     }
   }, [id, dispatch]);
-
+  if (error && error.includes("not found")) {
+    return <NotFoundPage />;
+  }
   const handleReadBook = () => {
     if (currentBook?.readOnlineUrl) {
       window.open(currentBook.readOnlineUrl, "_blank");
@@ -33,6 +36,8 @@ export const BookPage = () => {
 
   return (
     <PageLayout isLoading={isLoading} error={error}>
+      <BackToHomeButton />
+
       {currentBook && (
         <div className={styles.container}>
           <div className={styles.coverSection}>
