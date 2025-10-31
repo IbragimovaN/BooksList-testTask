@@ -10,8 +10,8 @@
 }
 
 .input {
-  width: 100%;
-  padding: 16px 48px 16px 20px;
+  width: 300px;
+  padding: 5px 15px;
   background-color: var(--bg-secondary);
   border: 2px solid var(--bg-secondary);
   border-radius: 12px;
