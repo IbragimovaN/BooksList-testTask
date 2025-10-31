@@ -49,13 +49,10 @@ export const booksSlice = createSlice({
   initialState,
   reducers: {
     addNewBook: (state, action: PayloadAction<IBook>) => {
-      state.booksList.push(action.payload);
+      console.log("addd", action.payload);
+      state.booksList.unshift(action.payload);
     },
-    deleteBook: (state, action: PayloadAction<IBook["id"]>) => {
-      state.booksList = state.booksList.filter(
-        (book) => book.id !== action.payload
-      );
-    },
+
     setFavorites: (state, action: PayloadAction<IBook["id"]>) => {
       const currentId = action.payload;
       if (state.favoritesBooksArr.some((item) => item === currentId)) {
@@ -73,7 +70,6 @@ export const booksSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchBooksAsync.pending, (state, action) => {
-        console.log("actionPending", action);
         if (action.meta.arg.page === 1) {
           state.isLoading = true;
         } else {
@@ -82,7 +78,6 @@ export const booksSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchBooksAsync.fulfilled, (state, action) => {
-        console.log("actionFullfilled", action);
         state.isLoading = false;
         state.isLoadingMore = false;
 
@@ -122,7 +117,7 @@ export const booksSlice = createSlice({
   },
 });
 
-export const { addNewBook, deleteBook, setFavorites, clearCurrentBook } =
+export const { addNewBook, setFavorites, clearCurrentBook } =
   booksSlice.actions;
 
 export default booksSlice.reducer;

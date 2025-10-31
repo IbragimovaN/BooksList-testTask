@@ -12,7 +12,6 @@ export const fetchBookById = async (bookId: string): Promise<IBook> => {
     }
 
     const data = await response.json();
-    console.log("cuurentData", data);
 
     if (!data.docs || data.docs.length === 0) {
       throw new Error("Book not found");

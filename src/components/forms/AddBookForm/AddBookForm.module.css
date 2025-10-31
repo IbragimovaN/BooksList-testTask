@@ -1,0 +1,36 @@
+.container {
+  max-width: 280px;
+  padding: 8px;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  border: 1px solid #3d3d3d;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 2px 0;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form button {
+  margin: 0 auto !important;
+}
+.fieldLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+  display: block;
+}

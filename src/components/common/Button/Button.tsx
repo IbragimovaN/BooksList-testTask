@@ -1,13 +1,15 @@
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import styles from "./Button.module.css";
 
 interface IProps {
   children: ReactNode;
-  onClick: () => void;
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  type?: "button" | "submit" | "reset";
 }
-export const Button = ({ children, onClick }: IProps) => {
+
+export const Button = ({ children, onClick, type = "button" }: IProps) => {
   return (
-    <button className={styles.button} onClick={onClick}>
+    <button className={styles.button} onClick={onClick} type={type}>
       {children}
     </button>
   );

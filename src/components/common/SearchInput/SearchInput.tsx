@@ -13,16 +13,14 @@ export const SearchInput = ({
   value,
 }: SearchInputProps) => {
   return (
-    <div className={styles.searchContainer}>
-      <div className={styles.inputWrapper}>
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => handleChange(e)}
-          placeholder={placeholder}
-          className={styles.input}
-        />
-      </div>
+    <div className={styles.inputWrapper}>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => handleChange(e)}
+        placeholder={placeholder}
+        className={styles.input}
+      />
     </div>
   );
 };

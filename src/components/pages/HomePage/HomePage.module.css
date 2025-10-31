@@ -29,3 +29,21 @@
     justify-content: center;
   }
 }
+
+.headerPanel {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.headerPanel > :first-child {
+  grid-column: 2;
+  justify-self: center;
+  min-width: 300px;
+  align-self: center;
+}
+
+.headerPanel > :last-child {
+  grid-column: 3;
+  justify-self: end;
+}

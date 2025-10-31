@@ -3,11 +3,13 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import type { IBook } from "../../../types/IBook";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { fetchBooksAsync } from "../../../store/booksSlice";
-import { PageLayout, SearchInput, Spinner } from "../../common";
+import { Button, PageLayout, SearchInput, Spinner } from "../../common";
 import type { RootState } from "../../../store";
 import styles from "./HomePage.module.css";
 import { useInfiniteScroll } from "../../../hooks/useInfiniteScroll";
 import { useDebounce } from "../../../hooks/useDebounce";
+import { AddBookForm } from "../../forms/AddBookForm/AddBookForm";
+import { ModalWindow } from "../../common/ModalWindow/ModalWindow";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -24,19 +26,29 @@ export const HomePage = () => {
 
   const { lastNodeRef } = useInfiniteScroll();
   const [query, setQuery] = useState("");
+  const [isOpenFormAddBook, setIsOpenFormNewBook] = useState(false);
   const debouncedValue = useDebounce(query, 500);
 
   useEffect(() => {
     dispatch(fetchBooksAsync({ page: 1, query: debouncedValue }));
   }, [dispatch, debouncedValue]);
 
+  console.log("list", booksList);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
 
+  const handleClickAddBook = () => {
+    setIsOpenFormNewBook(true);
+  };
+
   return (
     <PageLayout>
-      <SearchInput value={query} handleChange={handleChange}></SearchInput>
+      <div className={styles.headerPanel}>
+        <SearchInput value={query} handleChange={handleChange} />
+        <Button onClick={handleClickAddBook}>Добавить книгу</Button>
+      </div>
       <div className={styles.wrapper}>
         {isLoading ? (
           <Spinner className={styles.spinner} />
@@ -69,6 +81,11 @@ export const HomePage = () => {
           </>
         )}
       </div>
+      {isOpenFormAddBook && (
+        <ModalWindow onClose={() => setIsOpenFormNewBook(false)}>
+          <AddBookForm onClose={() => setIsOpenFormNewBook(false)} />
+        </ModalWindow>
+      )}
     </PageLayout>
   );
 };
