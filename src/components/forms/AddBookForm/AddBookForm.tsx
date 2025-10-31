@@ -1,4 +1,4 @@
-import { useRef, type FormEvent } from "react";
+import { useRef, type FormEvent, useState } from "react";
 import { Button, FormInput } from "../../common";
 import { BOOK_FORM_FIELDS } from "../../../constants/bookFormFields";
 import styles from "./AddBookForm.module.css";
@@ -28,9 +28,61 @@ const createBookFromFormData = (formData: FormData): IBook => {
 interface IProp {
   onClose: () => void;
 }
+
+interface FormErrors {
+  title?: string;
+  author?: string;
+  year?: string;
+  coverUrl?: string;
+}
+
 export const AddBookForm = ({ onClose }: IProp) => {
   const formRef = useRef<HTMLFormElement>(null);
   const dispatch = useDispatch();
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const validateForm = (formData: FormData): boolean => {
+    const newErrors: FormErrors = {};
+    const title = formData.get("title") as string;
+    const author = formData.get("author") as string;
+    const year = formData.get("year") as string;
+    const coverUrl = formData.get("coverUrl") as string;
+
+    if (!title?.trim()) {
+      newErrors.title = "Название книги обязательно";
+    }
+
+    if (!author?.trim()) {
+      newErrors.author = "Автор обязателен";
+    }
+
+    if (year) {
+      const yearNum = Number(year);
+      if (
+        isNaN(yearNum) ||
+        yearNum < 1000 ||
+        yearNum > new Date().getFullYear()
+      ) {
+        newErrors.year = "Введите корректный год";
+      }
+    }
+
+    if (coverUrl && !isValidUrl(coverUrl)) {
+      newErrors.coverUrl = "Введите корректный URL";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const isValidUrl = (url: string): boolean => {
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,9 +90,18 @@ export const AddBookForm = ({ onClose }: IProp) => {
     if (!formRef.current) return;
 
     const formData = new FormData(formRef.current);
+
+    if (!validateForm(formData)) {
+      return;
+    }
+
     const newBook = createBookFromFormData(formData);
     dispatch(addNewBook(newBook));
     onClose();
+  };
+
+  const clearError = (fieldName: string) => {
+    setErrors((prev) => ({ ...prev, [fieldName]: undefined }));
   };
 
   return (
@@ -54,12 +115,19 @@ export const AddBookForm = ({ onClose }: IProp) => {
       >
         <div className={styles.fields}>
           {BOOK_FORM_FIELDS.map((field, index) => (
-            <FormInput
-              label={field.label}
-              name={field.name}
-              key={index}
-              className={styles.input}
-            />
+            <div key={index}>
+              <FormInput
+                label={field.label}
+                name={field.name}
+                className={styles.input}
+                onChange={() => clearError(field.name)}
+              />
+              {errors[field.name as keyof FormErrors] && (
+                <div className={styles.error}>
+                  {errors[field.name as keyof FormErrors]}
+                </div>
+              )}
+            </div>
           ))}
         </div>
         <Button type="submit">Добавить книгу</Button>

@@ -34,3 +34,13 @@
   margin-bottom: 2px;
   display: block;
 }
+.error {
+  color: var(--error);
+  font-size: 0.7rem;
+  margin-top: 2px;
+  margin-bottom: 4px;
+}
+
+.input:invalid {
+  border-color: var(--error);
+}
