@@ -32,8 +32,8 @@ const initialState: IBooksSlice = {
 
 export const fetchBooksAsync = createAsyncThunk(
   "books/fetchBooks",
-  async (page: number = 1) => {
-    return await fetchBooks(page);
+  async ({ page = 1, query = "" }: { page: number; query?: string }) => {
+    return await fetchBooks(page, query);
   }
 );
 
@@ -74,7 +74,7 @@ export const booksSlice = createSlice({
     builder
       .addCase(fetchBooksAsync.pending, (state, action) => {
         console.log("actionPending", action);
-        if (action.meta.arg === 1) {
+        if (action.meta.arg.page === 1) {
           state.isLoading = true;
         } else {
           state.isLoadingMore = true;
@@ -86,11 +86,9 @@ export const booksSlice = createSlice({
         state.isLoading = false;
         state.isLoadingMore = false;
 
-        // Для первой страницы заменяем книги, для последующих - добавляем
-        if (action.meta.arg === 1) {
+        if (action.meta.arg.page === 1) {
           state.booksList = action.payload.booksList;
         } else {
-          // Используем Set для избежания дубликатов (как в исходном примере)
           const existingIds = new Set(state.booksList.map((book) => book.id));
           const newBooks = action.payload.booksList.filter(
             (book) => !existingIds.has(book.id)
@@ -99,7 +97,7 @@ export const booksSlice = createSlice({
         }
 
         state.hasMore = action.payload.hasMore;
-        state.currentPage = action.meta.arg;
+        state.currentPage = action.meta.arg.page;
         state.error = null;
       })
       .addCase(fetchBooksAsync.rejected, (state, action) => {

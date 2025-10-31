@@ -5,6 +5,12 @@
   align-items: center;
   justify-content: space-between;
 }
+.wrapper {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .spinner {
   width: 50px;
@@ -15,6 +21,9 @@
   align-items: center;
 }
 
+.error {
+  color: var(--error);
+}
 @media (max-width: 760px) {
   .list {
     justify-content: center;

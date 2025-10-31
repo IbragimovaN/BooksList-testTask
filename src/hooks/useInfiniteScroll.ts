@@ -15,16 +15,15 @@ export const useInfiniteScroll = () => {
     (node: HTMLDivElement | null) => {
       if (isLoading || isLoadingMore || !hasMore) return;
       if (observer.current) {
-        observer.current.disconnect(); //если у нас уже есть экземпляр IntersectionObserver, мы отключаем его. Это нужно, чтобы избежать утечек памяти
+        observer.current.disconnect();
       }
       observer.current = new IntersectionObserver((elem) => {
-        //Здесь мы создаем новый экземпляр IntersectionObserver. Этот объект будет следить за тем, когда элемент становится видимым на экране.elem — это массив элементов нам нужен первый
         if (elem[0].isIntersecting && hasMore) {
-          dispatch(fetchBooksAsync(currentPage + 1));
+          dispatch(fetchBooksAsync({ page: currentPage + 1, query: "" }));
         }
       });
       if (node) {
-        observer.current.observe(node); //передаем дом узел за которым хотим следить (див в с книжкой)
+        observer.current.observe(node);
       }
     },
     [isLoading, hasMore, isLoadingMore, currentPage, dispatch]

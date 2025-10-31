@@ -4,8 +4,8 @@ import { Spinner } from "../Spinner/Spinner";
 
 interface IProps {
   children: ReactNode;
-  isLoading: boolean;
-  error: string | null;
+  isLoading?: boolean;
+  error?: string | null;
 }
 export const PageLayout = ({ children, isLoading, error }: IProps) => {
   return (
