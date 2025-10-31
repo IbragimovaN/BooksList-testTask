@@ -12,6 +12,7 @@ interface BooksListProps {
   error: string | null;
   hasMore: boolean;
   showOnlyFavorites: boolean;
+  query: string;
 }
 
 export const BooksList = ({
@@ -22,6 +23,7 @@ export const BooksList = ({
   error,
   hasMore,
   showOnlyFavorites,
+  query,
 }: BooksListProps) => {
   const { lastNodeRef } = useInfiniteScroll();
 
@@ -47,7 +49,7 @@ export const BooksList = ({
             <div
               key={`${book.id}-${index}`}
               ref={
-                isLastElement && hasMore && !showOnlyFavorites
+                isLastElement && hasMore && !showOnlyFavorites && query === ""
                   ? lastNodeRef
                   : undefined
               }

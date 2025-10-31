@@ -68,6 +68,7 @@ export const HomePage = () => {
         error={error}
         hasMore={hasMore}
         showOnlyFavorites={showOnlyFavorites}
+        query={query}
       />
 
       {isOpenFormAddBook && (
