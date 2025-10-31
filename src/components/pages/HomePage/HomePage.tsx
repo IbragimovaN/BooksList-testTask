@@ -1,21 +1,13 @@
-import { Card } from "../../Card/Card";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import type { IBook } from "../../../types/IBook";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { fetchBooksAsync } from "../../../store/booksSlice";
-import {
-  Button,
-  FilterChip,
-  PageLayout,
-  SearchInput,
-  Spinner,
-} from "../../common";
+import { Button, FilterChip, PageLayout, SearchInput } from "../../common";
 import type { RootState } from "../../../store";
 import styles from "./HomePage.module.css";
-import { useInfiniteScroll } from "../../../hooks/useInfiniteScroll";
 import { useDebounce } from "../../../hooks/useDebounce";
 import { AddBookForm } from "../../forms/AddBookForm/AddBookForm";
 import { ModalWindow } from "../../common/ModalWindow/ModalWindow";
+import { BooksList } from "../../BooksList/BooksList";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +22,6 @@ export const HomePage = () => {
     return state.booksStore;
   });
 
-  const { lastNodeRef } = useInfiniteScroll();
   const [query, setQuery] = useState("");
   const [isOpenFormAddBook, setIsOpenFormNewBook] = useState(false);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
@@ -68,38 +59,17 @@ export const HomePage = () => {
         <SearchInput value={query} handleChange={handleChange} />
         <Button onClick={handleClickAddBook}>Добавить книгу</Button>
       </div>
-      <div className={`${isLoading ? styles.wrapper : ""}`}>
-        {isLoading ? (
-          <Spinner className={styles.spinner} />
-        ) : error ? (
-          <div className={styles.error}>{error}</div>
-        ) : (
-          <>
-            <div className={styles.list}>
-              {filteredBooks.map((book: IBook, index: number) => {
-                const isLastElement = booksList.length === index + 1;
 
-                return (
-                  <div
-                    key={`${book.id}-${index}`}
-                    ref={isLastElement && hasMore ? lastNodeRef : undefined}
-                  >
-                    <Card
-                      book={book}
-                      isFavorite={favoritesBooksArr.some(
-                        (item) => item === book.id
-                      )}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-            {isLoadingMore && (
-              <Spinner size="small" className={styles.spinner} />
-            )}
-          </>
-        )}
-      </div>
+      <BooksList
+        books={filteredBooks}
+        favoritesBooksArr={favoritesBooksArr}
+        isLoading={isLoading}
+        isLoadingMore={isLoadingMore}
+        error={error}
+        hasMore={hasMore}
+        showOnlyFavorites={showOnlyFavorites}
+      />
+
       {isOpenFormAddBook && (
         <ModalWindow onClose={() => setIsOpenFormNewBook(false)}>
           <AddBookForm onClose={() => setIsOpenFormNewBook(false)} />
