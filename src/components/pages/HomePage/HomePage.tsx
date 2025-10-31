@@ -3,7 +3,13 @@ import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import type { IBook } from "../../../types/IBook";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { fetchBooksAsync } from "../../../store/booksSlice";
-import { Button, PageLayout, SearchInput, Spinner } from "../../common";
+import {
+  Button,
+  FilterChip,
+  PageLayout,
+  SearchInput,
+  Spinner,
+} from "../../common";
 import type { RootState } from "../../../store";
 import styles from "./HomePage.module.css";
 import { useInfiniteScroll } from "../../../hooks/useInfiniteScroll";
@@ -27,18 +33,23 @@ export const HomePage = () => {
   const { lastNodeRef } = useInfiniteScroll();
   const [query, setQuery] = useState("");
   const [isOpenFormAddBook, setIsOpenFormNewBook] = useState(false);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const debouncedValue = useDebounce(query, 500);
 
-  console.log(isLoadingMore);
+  const filteredBooks = showOnlyFavorites
+    ? booksList.filter((book) => favoritesBooksArr.includes(book.id))
+    : booksList;
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
 
   useEffect(() => {
     dispatch(fetchBooksAsync({ page: 1, query: debouncedValue }));
   }, [dispatch, debouncedValue]);
 
-  console.log("list", booksList);
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
+  const handleToggleFavoritesFilter = () => {
+    setShowOnlyFavorites((prev) => !prev);
   };
 
   const handleClickAddBook = () => {
@@ -48,6 +59,12 @@ export const HomePage = () => {
   return (
     <PageLayout>
       <div className={styles.headerPanel}>
+        <FilterChip
+          isActive={showOnlyFavorites}
+          onClick={handleToggleFavoritesFilter}
+          label="Избранные"
+          count={favoritesBooksArr.length}
+        />
         <SearchInput value={query} handleChange={handleChange} />
         <Button onClick={handleClickAddBook}>Добавить книгу</Button>
       </div>
@@ -59,7 +76,7 @@ export const HomePage = () => {
         ) : (
           <>
             <div className={styles.list}>
-              {booksList.map((book: IBook, index: number) => {
+              {filteredBooks.map((book: IBook, index: number) => {
                 const isLastElement = booksList.length === index + 1;
 
                 return (
