@@ -29,6 +29,8 @@ export const HomePage = () => {
   const [isOpenFormAddBook, setIsOpenFormNewBook] = useState(false);
   const debouncedValue = useDebounce(query, 500);
 
+  console.log(isLoadingMore);
+
   useEffect(() => {
     dispatch(fetchBooksAsync({ page: 1, query: debouncedValue }));
   }, [dispatch, debouncedValue]);
@@ -49,7 +51,7 @@ export const HomePage = () => {
         <SearchInput value={query} handleChange={handleChange} />
         <Button onClick={handleClickAddBook}>Добавить книгу</Button>
       </div>
-      <div className={styles.wrapper}>
+      <div className={`${isLoading ? styles.wrapper : ""}`}>
         {isLoading ? (
           <Spinner className={styles.spinner} />
         ) : error ? (
