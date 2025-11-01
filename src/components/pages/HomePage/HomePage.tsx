@@ -8,6 +8,7 @@ import { useDebounce } from "../../../hooks/useDebounce";
 import { AddBookForm } from "../../forms/AddBookForm/AddBookForm";
 import { ModalWindow } from "../../common/ModalWindow/ModalWindow";
 import { BooksList } from "../../BooksList/BooksList";
+import ScrollToTop from "../../common/ScrollToTop/ScrollToTop";
 
 export const HomePage = () => {
   const dispatch = useAppDispatch();
@@ -70,7 +71,7 @@ export const HomePage = () => {
         showOnlyFavorites={showOnlyFavorites}
         query={query}
       />
-
+      <ScrollToTop />
       {isOpenFormAddBook && (
         <ModalWindow onClose={() => setIsOpenFormNewBook(false)}>
           <AddBookForm onClose={() => setIsOpenFormNewBook(false)} />

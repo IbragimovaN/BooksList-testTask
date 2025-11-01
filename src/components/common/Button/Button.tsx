@@ -5,11 +5,23 @@ interface IProps {
   children: ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   type?: "button" | "submit" | "reset";
+  className?: string;
 }
 
-export const Button = ({ children, onClick, type = "button" }: IProps) => {
+export const Button = ({
+  children,
+  onClick,
+  type = "button",
+  className,
+}: IProps) => {
   return (
-    <button className={styles.button} onClick={onClick} type={type}>
+    <button
+      className={`${styles.button} ${
+        className ? className : styles.defaultBtn
+      }`}
+      onClick={onClick}
+      type={type}
+    >
       {children}
     </button>
   );
