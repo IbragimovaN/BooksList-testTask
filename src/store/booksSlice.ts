@@ -50,7 +50,6 @@ export const booksSlice = createSlice({
   initialState,
   reducers: {
     addNewBook: (state, action: PayloadAction<IBook>) => {
-      console.log("addd", action.payload);
       state.booksList.unshift(action.payload);
     },
 

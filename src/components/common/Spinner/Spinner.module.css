@@ -13,7 +13,6 @@
   animation: spin 1s linear infinite;
 }
 
-/* Размеры */
 .small .loader {
   width: 20px;
   height: 20px;
