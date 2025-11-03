@@ -34,3 +34,7 @@ npm install
 ```bash
 npm run dev
 ```
+
+## Ссылка на деплой
+
+[Посмотреть на github pages](https://ibragimovan.github.io/BooksList-testTask/#/)
